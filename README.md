@@ -1,225 +1,267 @@
-# SC2002
-SC2002 Object Oriented Programming Project 
+📌 Internship Placement Management System
+SC2002 Object-Oriented Programming — Semester 1 AY25/26
 
-(APP)
-main.java 
-- bootstrap the app (construct dependencies, start/stop)
+CLI-based internship management platform designed with BCE architecture and SOLID principles.
 
-SystemCoordinator.java 
-- main functions: orchestrate runtime behaviour (menus, routing, services)
-- coordinates login/CR registration
-- set/clear current user in AppState for preferences/notifications 
+👥 Group Members
+Name	Course	Lab Group
+Tan Shi Ya Shianne	SC2002	SCED
+Tham En Yi	SC2002	SCED
+Kuek Pei Shan	SC2002	SCED
+Goh Jun Xian, Bryant	SC2002	SCED
+📚 Project Overview
 
-DONT MERGE MAIN & SYSTEM.COORDINATOR (will violate SRP)
+This project implements a Command Line Internship Placement Management System that simulates interactions between:
 
-AppState.java 
-- SINGLETON in-memory state holder for running application
-- tracks current logged in users 
-- keeps user nonNegotiables and RankingPreferences (Additional feature: Recommendation System) so they persist across menus during this run 
+Students
 
+Company Representatives
 
+Career Centre Staff
 
-(BOUNDARY)
-CompanyRepMenu.java
-- create internship (autoassigned IC as logged in CR)
-- list/search their own internships 
-- approve internships
+It is fully object-oriented following Boundary–Control–Entity (BCE) architecture, SOLID design principles, and an extensible modular structure using Strategy, Template Method, Command, and Composition patterns.
 
-StudentMenu.java
-- view internships (manual sort/pagination; recommendation system (AF))
-- filter options: set nonnegotiables, ranking weights, saved filters
-- apply, view status, accept offers, request withdrawals
-- join waitlist and view notifications 
+The system uses CSV-based persistence with pluggable storage and supports filtering, recommendations, waitlists, batch operations, and audit logging.
 
-StaffMenu.java 
-- approve reps 
-- review withdrawal queue (free slots and ping waitlisted)
-- generate advanced report, export CSV
-- run bulk approve with undo and view audit log 
+🚀 Features by User Role
+🔐 1. All Users
 
+* Login & logout
 
+* Change password
 
-(ENTITIES/USERS)
-User.java
-- userId, name, password, inbox(notifications from waitlist AF), savedFilters
-- login(), changePassword() w basic validation 
+* Default password is password
 
-Student.java 
-- year, major 
-- applyForInternship()
-- withdrawApplication()
-- acceptPlacement()
+* Receive notifications (inbox)
 
-CompanyRep.java
-- companyName, department, position, approved
-- approval gated by Staff
+* Access session-persistent filter & preference settings
 
-CareerCentreStaff.java
-- department
+🎓 2. Students
 
+* View internships filtered by:
 
-(ENTITIES/INTERNSHIP)
-Internship.java 
-- Fields: id/title/description/level/major/company/postedBy/slots/visible/open/close/status.
-- Tracks confirmed count → FILLED status when full.
-- isOpenFor(date) check; increment/decrement slots.
-- Auto-assigns postedBy (rep-in-charge) on creation.
+* Major match
 
-InternshipApp.java
-- A student’s application to an internship: Links Student + Internship.
-- ApplicationStatus (PENDING/SUCCESSFUL/UNSUCCESSFUL/CONFIRMED/WITHDRAWN).
-- Flags withdrawal requests → staff reviews in queue.
+* Year eligibility (Y1–2: Basic only; Y3–4: All levels)
 
-ApplicationStatus.java
-- Enum of valid application states.
+* Visible postings (but can still view their own applications even if visibility is off)
 
-InternshipIds.java
-- Generates human-readable IDs like INT-0001.
+* Apply for internships (max 3 active applications)
 
+* Prevented from duplicate applications
 
-(ENTITIES/FILTER)
-FilterSettings.java
-- Saved per-user filter (spec requirement):
-- Optional status, level, major, company.
-- matches(internship) to filter lists.
-- Stored in User.savedFilters.
+* View application history & statuses (Pending / Successful / Unsuccessful / Withdrawn / Confirmed)
 
-FilterCriteria.java
-- Ad-hoc filter DTO (optional: if you want to compose complex searches). Not required by menus but useful for future extensions.
+* Accept one successful offer → automatically withdraws all others
 
-NonNegotiables.java
-- Smart-matching “musts”:
-- mustMatchMajor, onlyOpenNow, and title keywords list.
+* Request withdrawals (subject to Career Centre Staff approval)
 
-RankingPreferences.java
-- Smart-matching weights:
-- wMajor, wClosingSoon, wLevelFit, wTitleKeywords (ints). Used by recommender.
+* Configure Smart Recommendation Settings (keywords, level fit, major fit, closing-soon logic)
 
+🏢 3. Company Representatives
 
+* Register account (pending approval by Staff)
 
-(POLICY)
-EligibilityPolicy.java
-- Interface for “who can apply” logic.
+After approval:
 
-DefaultEligibilityPolicy.java
-- Default rule: if internship has preferredMajor, student must match major; else ok.
+* Create internships (max 5 postings)
 
-AccessControl.java
-- Guards authorisation (e.g., a rep can modify only their internship).
+* Edit internship details (before approval)
 
+* Toggle posting visibility
 
+* View applications for each internship
 
-(REPO) (in-memory data access)
-Repository.java
-- Simple in-memory DAO:
-- Bootstrapped from storage.
-- Find/save/update Internship, InternshipApp, and look up users.
-- Central place menus/services use to fetch/modify data.
+* Approve / Reject student applications
 
+* Automatically updates slot counts & filled status
 
+* View internship lifecycle: Pending → Approved → Filled
 
-(SERVICES) (business services)
-RecommendationService.java
-- Smart ranking engine:
-- Applies NonNegotiables as hard filter.
-- Scores by major match, closing soon, level proximity to student year, and keyword hits (including extra search keyword).
-- Sorts by score desc + tie-breakers.
+🧑‍💼 4. Career Centre Staff
 
-SearchSpecification.java
-- Simple keyword match across title/desc/company/major.
+* Approve / reject:
 
-AdvancedReportBuilder.java
-- Composes textual report sections (counts by status/level/major + fill rate), and can emit CSV rows.
+* Company Representative registrations
 
-ReportExporter.java
-- Writes report to CSV/TXT files.
+* Internship postings
 
-Paginator.java
-- Splits lists into pages for CLI.
+* Student withdrawal requests
 
-sorting/ComparatorFactory.java
-- Strategy set of comparators: by title, closing date, company, or level+title.
+* Generate internship reports with filters:
 
-NotificationService.java
-- Pushes messages to a user’s inbox.
+* Status, Major, Level, Company, Closing Date, etc.
 
-NotificationCenter.java
-- Broadcast hook: when a slot frees (slotFreed()), notify only students who joined that internship’s waitlist.
+* Perform Batch Approvals
 
-WaitlistService.java
-- Manages waitlists per internship (joinWaitlist, getWaitlisted, popAll). Stores per internship ID a Set of student IDs.
+* Access Audit Logs and support Undo (via Command pattern)
 
-WithdrawalQueue.java
-- Queue of pending withdrawal requests for staff to review/approve.
+* Manage system-wide consistency rules
 
+🧩 Additional Features Implemented
+Feature	Description
+Smart Recommendation Engine	Ranks internships using student priorities (level match, major match, closing date urgency, keywords).
+Waitlist Service	Students may join waitlists when slots are full.
+Withdrawal Queue	Staff can review, approve, or deny withdrawal requests.
+Strategy-based Sorting & Pagination	Sort by name, date, company; paginated view for readability.
+Export Report Service	Export internship & application data to CSV.
+Filter Persistence	Keeps user preferences across menus during the session.
+Role-Based Access Control Guard	Ensures only authorized users execute sensitive actions.
+DuplicateApplicationException	Stops duplicate submissions cleanly.
+Undo & Audit Logging (Command Pattern)	Rollback previous admin operations; track all staff actions.
+Pluggable Storage (DIP)	Swap between CsvStorage and future SerializedStorage.
+EligibilityPolicy (Strategy)	Year/major-based rules can be swapped flexibly.
+TablePrinter Utility	Produces clean, aligned CLI tables.
+🧱 Architecture
+BCE Layering
+/boundary      → CLI menus (StudentMenuUI, CompanyRepMenuUI, StaffMenuUI)
+/control       → Business logic (ApplicationControl, RecommendationService, Repo, CommandManager)
+/entities      → Core data models (User, Student, Internship, Application, Enums)
+/storage       → CsvStorage / Storage interface
+/util          → Table formatting, comparators, policies, etc.
 
+Key Concepts Used
 
+Encapsulation: Entities keep fields private; access through controlled getters/setters.
 
-(STORAGE) (CSV I/O)
+Composition over Inheritance: Filters, recommendation settings, and policies composed instead of deep subclassing.
 
-Storage.java
-- Pluggable storage interface (loadAll, saveAll).
+Loose Coupling: Controllers depend on abstractions (Storage, Repository, EligibilityPolicy, Command).
 
-CsvStorage.java
-- Concrete CSV storage:
-- Loads students, staff, company reps, internships, applications from CSVs.
-- Saves them back on exit.
-- Injects loaded lists into Repository.
+High Cohesion: Each class has a focused responsibility (SRP).
 
-DataManager.java
-- CSV parsing/writing for:
-- students (school format: StudentID,Name,Major,Year,Email).
-- staff (school format: StaffID,Name,Role,Department,Email).
-- company reps (school format: CompanyRepID,Name,CompanyName,Department,Position,Email,Status).
-- internships (internal format; includes repId to link creator).
+🧠 SOLID Principles in This Project
+✔ S — Single Responsibility Principle
 
-ApplicationCsvIO.java
-- CSV parsing/writing for applications:
-- id,studentId,internshipId,status,withdrawalRequested.
+PasswordService handles hashing, strength checking, and validation only — no authentication, no I/O.
 
+✔ O — Open/Closed Principle
 
+MenuAction allows adding new actions without modifying existing menus.
+Recommendation weights, sorting strategies, eligibility rules are all pluggable.
 
-(COMMANDS) (Command pattern + undo)
-Command.java
-- Command interface: execute, undo, name.
+✔ L — Liskov Substitution Principle
 
-BulkApproveCommand.java
-- Sets many internships to APPROVED + visible, with snapshot so undo restores previous states. Supports “except” predicate.
+User → Student / CompanyRep / CareerCentreStaff
+All subclasses maintain the contract defined by User and can be used interchangeably by polymorphic flows.
 
-CommandManager.java
-- Runs commands, keeps history stack, supports undo, records to audit log.
+✔ I — Interface Segregation Principle
 
+Each menu role uses only the actions it needs:
 
+Student-only actions
 
-(AUDIT) (simple audit trail)
-AuditLog.java
-- Collects AuditEntry items and prints them.
+Rep-only actions
 
-AuditEntry.java
-- Timestamp + action + phase (EXECUTE/UNDO).
+Staff-only actions
 
-(VALIDATION) (custom exceptions)
-InvalidInputException.java
-- Throw for validation errors.
+No “god interface”; all implement tiny MenuAction units.
 
-UnauthorizedActionException.java
-- Throw for access violations.
+✔ D — Dependency Inversion Principle
 
-DuplicateApplicationException.java
-- Throw on repeated application to same internship.
+High-level modules depend on:
 
+Storage
 
+Repository
 
-(UTILS)
-Ansi.java
-- Optional CLI color helpers (green/red). Use if your terminal supports ANSI.
+EligibilityPolicy
 
+Command
 
-How the whole thing flows (typical run)
-- Main → SystemCoordinator.loadAll() (CSV → memory → Repository).
-- User logs in → AppState.setCurrentUser.
-- Routed to role menu:
--- Student: sets filters/weights (saved in AppState), views list (manual sort or reco ranking), applies/accepts/withdraws, joins waitlist, reads notifications.
--- Rep: creates internships (rep auto-assigned), lists/searches own postings.
--- Staff: approves reps, processes withdrawal queue (slot freed → notify waitlisted), builds & exports reports, runs bulk approve → undo → view audit.
-- Exit → SystemCoordinator.saveAll() (memory → CSV).
+WaitlistListener
+
+All injected via constructors → easy to replace or extend.
+
+📁 Repository Structure
+SC2002/
+│── src/
+│   ├── boundary/
+│   ├── control/
+│   ├── entities/
+│   ├── storage/
+│   ├── util/
+│   └── App.java
+│
+│── data/
+│   ├── sample_student_list.csv
+│   ├── sample_company_list.csv
+│   └── sample_staff_list.csv
+│
+├── diagrams/
+│   ├── uml_class_diagram.png
+│   └── uml_sequence_diagram.png
+│
+├── docs/
+│   └── javadoc/
+│
+├── README.md
+└── report.pdf
+
+🛠️ Setup & Running the Application
+Prerequisites
+
+Java 17+
+
+Terminal / command prompt
+
+To Run
+cd src
+javac App.java
+java App
+
+To Regenerate Javadoc
+javadoc -d docs/javadoc -author -private -version $(find . -name "*.java")
+
+🧪 Testing
+
+Test cases are listed in the /tests section and follow:
+
+Authentication
+
+Data persistence
+
+Application logic
+
+Staff approval workflows
+
+Filtering & sorting correctness
+
+Recommendation ranking accuracy
+
+Edge cases (duplicate apply, waitlists, visibility toggle, withdrawn state)
+
+Refer to full test matrix inside report.
+Source test cases are based on assignment sample inputs. 
+
+SC2002 Assignment 2025S1 (1)
+
+📝 Reflection Summary 
+
+Learned to balance extensibility with simplicity
+
+Experienced the benefits of composition, clean interfaces, and strategic pattern usage
+
+Debugging CSV-based systems taught us the importance of logging & early testing
+
+Gained strong understanding of maintainable OO design
+
+Future improvements:
+
+Event bus for Observer pattern
+
+Automated JUnit testing
+
+More robust error handling
+
+🔗 Report & Deliverables
+
+Full PDF Report (Design Considerations, UML, Sequence Diagram, Reflection)
+
+Javadoc
+
+Data files
+
+Source code
+
+Additional diagrams
