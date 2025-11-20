@@ -1,0 +1,16 @@
+CompanyRepID,Name,CompanyName,Department,Position,Email,Status,Password
+rep001,John Tan,ByteForge,Technology,HR Manager,john.tan@byteforge.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep002,Lisa Ng,FinSight Analytics,Data Analytics,Senior Analyst,lisa.ng@finsight.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep003,Alex Ong,ElectraWorks,Engineering,Lead Engineer,alex.ong@electraworks.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep004,Kelly Lim,MarketWise,Marketing,Marketing Executive,kelly.lim@marketwise.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep005,Devin Tan,Appify Tech,Development,Software Engineer,devin.tan@appify.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep006,Samuel Low,MechaCore,Mechanical,R&D Engineer,samuel.low@mechacore.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep007,Li Hui,NTU Research Lab,Research,Principal Investigator,li.hui@ntu.edu.sg,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep008,Wei Lin,DataSense AI,AI Research,Data Scientist,wei.lin@datasense.ai,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep009,Clara Tan,PixelForge,Design,Creative Lead,clara.tan@pixelforge.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep010,Melissa Ong,WorkSmart,Human Resources,HR Specialist,melissa.ong@worksmart.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep011,Jason Teo,CyberSafe Pte Ltd,Security,Cybersecurity Consultant,jason.teo@cybersafe.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+rep012,Rep X,X,HR,Intern,companyx@gmail.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+tan.lifong@ntuc.com,Tan Li fong,NTUC,Marketing,Marketing Executive,tan.lifong@ntuc.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+jane.lim@sia.com,Jane Lim,SIA,HR,Human resource director,jane.lim@sia.com,Approved,5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+tham@ntu.com,tham,ntu,HR,HR manager,tham@ntu.com,Approved,91366732dd71b2dbdf59b7d756c4f54ca7afe268728d07715c14adc17988c99e
