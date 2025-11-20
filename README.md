@@ -1,267 +1,162 @@
 📌 Internship Placement Management System
-SC2002 Object-Oriented Programming — Semester 1 AY25/26
+### *SC2002 Object-Oriented Programming — AY25/26*
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-17-red">
+  <img src="https://img.shields.io/badge/Status-Completed-brightgreen">
+  <img src="https://img.shields.io/badge/Architecture-BCE-blue">
+</p>
+---
 
-CLI-based internship management platform designed with BCE architecture and SOLID principles.
+## 👥 Group Members
 
-👥 Group Members
-Name	Course	Lab Group
-Tan Shi Ya Shianne	SC2002	SCED
-Tham En Yi	SC2002	SCED
-Kuek Pei Shan	SC2002	SCED
-Goh Jun Xian, Bryant	SC2002	SCED
-📚 Project Overview
+| Name                     | 
+| ------------------------ | 
+| **Tan Shi Ya Shianne**   | 
+| **Tham En Yi**           | 
+| **Kuek Pei Shan**        | 
+| **Goh Jun Xian, Bryant** | 
 
-This project implements a Command Line Internship Placement Management System that simulates interactions between:
+---
 
-Students
+# 📝 Project Overview
 
-Company Representatives
+This repository contains our CLI-based **Internship Placement Management System**, built for the SC2002 OOP assignment.
+The system supports **Students**, **Company Representatives**, and **Career Centre Staff**, with persistent CSV data storage, modular architecture, and extensible features implemented using **SOLID principles** and **design patterns**.
 
-Career Centre Staff
+---
 
-It is fully object-oriented following Boundary–Control–Entity (BCE) architecture, SOLID design principles, and an extensible modular structure using Strategy, Template Method, Command, and Composition patterns.
+# 🗂 Features by User Role
 
-The system uses CSV-based persistence with pluggable storage and supports filtering, recommendations, waitlists, batch operations, and audit logging.
-
-🚀 Features by User Role
-🔐 1. All Users
+## 🔐 All Users
 
 * Login & logout
-
 * Change password
+* Default password: `password`
+* Receive notifications (Inbox)
+* Session-persistent filter settings
 
-* Default password is password
+---
 
-* Receive notifications (inbox)
-
-* Access session-persistent filter & preference settings
-
-🎓 2. Students
+## 🎓 Students
 
 * View internships filtered by:
 
-* Major match
-
-* Year eligibility (Y1–2: Basic only; Y3–4: All levels)
-
-* Visible postings (but can still view their own applications even if visibility is off)
-
-* Apply for internships (max 3 active applications)
-
+  * Major match
+  * Year eligibility
+  * Internship level
+  * Visibility
+* Apply for up to **3 internships**
 * Prevented from duplicate applications
+* View application statuses (Pending / Successful / Unsuccessful / Withdrawn / Confirmed)
+* Accept one offer → auto-withdraw others
+* Request withdrawal (staff approval required)
+* Configure **Smart Recommendation Engine** (keywords, level fit, major fit, closing soon)
 
-* View application history & statuses (Pending / Successful / Unsuccessful / Withdrawn / Confirmed)
+---
 
-* Accept one successful offer → automatically withdraws all others
+## 🏢 Company Representatives
 
-* Request withdrawals (subject to Career Centre Staff approval)
+* Register account (requires staff approval)
+* Create, edit (before approval), and manage internship postings
+* Toggle visibility
+* View all applications per internship
+* Approve / reject applications
+* Manage slots and filled status accurately
 
-* Configure Smart Recommendation Settings (keywords, level fit, major fit, closing-soon logic)
+---
 
-🏢 3. Company Representatives
-
-* Register account (pending approval by Staff)
-
-After approval:
-
-* Create internships (max 5 postings)
-
-* Edit internship details (before approval)
-
-* Toggle posting visibility
-
-* View applications for each internship
-
-* Approve / Reject student applications
-
-* Automatically updates slot counts & filled status
-
-* View internship lifecycle: Pending → Approved → Filled
-
-🧑‍💼 4. Career Centre Staff
+## 🧑‍💼 Career Centre Staff
 
 * Approve / reject:
 
-* Company Representative registrations
+  * Company Representative accounts
+  * Internship postings
+  * Withdrawal requests
+* Generate reports with filters (level, major, status, company, etc.)
+* Perform **Batch Approvals**
+* View **Audit Logs**
+* Undo actions using **Command Pattern**
 
-* Internship postings
+---
 
-* Student withdrawal requests
+# 🧩 Additional Features Implemented
 
-* Generate internship reports with filters:
+| Feature                                     | Description                                                                      |
+| ------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Smart Recommendation Engine**             | Ranks internships by student preferences (level, major, keywords, closing date). |
+| **Waitlist Service**                        | Manages waitlist for full internships.                                           |
+| **Withdrawal Queue**                        | Staff-reviewable withdrawal processing.                                          |
+| **Sorting & Pagination (Strategy Pattern)** | Sort by name/date/company, with page navigation.                                 |
+| **ExportReportService**                     | CSV export for staff reports.                                                    |
+| **Filter Persistence**                      | Saves filters across menus.                                                      |
+| **DuplicateApplicationException**           | Prevents repeated applications.                                                  |
+| **Undo + Audit Logs**                       | Admin actions reversible with traceability.                                      |
+| **Role-Based Access Control**               | Secure access to restricted operations.                                          |
+| **Pluggable Storage (DIP)**                 | Easily switch between CsvStorage and future Storage types.                       |
+| **EligibilityPolicy (Strategy)**            | Different policies for year/major restrictions.                                  |
+| **TablePrinter Utility**                    | Clean CLI table formatting.                                                      |
 
-* Status, Major, Level, Company, Closing Date, etc.
+---
 
-* Perform Batch Approvals
+# 🧱 Architecture Overview
 
-* Access Audit Logs and support Undo (via Command pattern)
+```
+src/
+│── boundary/     → Menu UIs (Student, Rep, Staff)
+│── control/      → Business logic, Recommendation, Repos, Commands
+│── entities/     → User, Internship, Application, Enums
+│── storage/      → CsvStorage, Storage interface
+│── util/         → Helpers, comparators, policies
+└── App.java      → Main entry
+```
 
-* Manage system-wide consistency rules
+---
 
-🧩 Additional Features Implemented
-Feature	Description
-Smart Recommendation Engine	Ranks internships using student priorities (level match, major match, closing date urgency, keywords).
-Waitlist Service	Students may join waitlists when slots are full.
-Withdrawal Queue	Staff can review, approve, or deny withdrawal requests.
-Strategy-based Sorting & Pagination	Sort by name, date, company; paginated view for readability.
-Export Report Service	Export internship & application data to CSV.
-Filter Persistence	Keeps user preferences across menus during the session.
-Role-Based Access Control Guard	Ensures only authorized users execute sensitive actions.
-DuplicateApplicationException	Stops duplicate submissions cleanly.
-Undo & Audit Logging (Command Pattern)	Rollback previous admin operations; track all staff actions.
-Pluggable Storage (DIP)	Swap between CsvStorage and future SerializedStorage.
-EligibilityPolicy (Strategy)	Year/major-based rules can be swapped flexibly.
-TablePrinter Utility	Produces clean, aligned CLI tables.
-🧱 Architecture
-BCE Layering
-/boundary      → CLI menus (StudentMenuUI, CompanyRepMenuUI, StaffMenuUI)
-/control       → Business logic (ApplicationControl, RecommendationService, Repo, CommandManager)
-/entities      → Core data models (User, Student, Internship, Application, Enums)
-/storage       → CsvStorage / Storage interface
-/util          → Table formatting, comparators, policies, etc.
+# 🧠 SOLID Principles Applied
 
-Key Concepts Used
+## ✔ Single Responsibility Principle (SRP)
 
-Encapsulation: Entities keep fields private; access through controlled getters/setters.
+`PasswordService` handles **only** hashing + validation — no I/O, no user logic.
 
-Composition over Inheritance: Filters, recommendation settings, and policies composed instead of deep subclassing.
+## ✔ Open/Closed Principle (OCP)
 
-Loose Coupling: Controllers depend on abstractions (Storage, Repository, EligibilityPolicy, Command).
+`MenuAction` lets us add new menu actions **without modifying existing code**.
 
-High Cohesion: Each class has a focused responsibility (SRP).
+## ✔ Liskov Substitution Principle (LSP)
 
-🧠 SOLID Principles in This Project
-✔ S — Single Responsibility Principle
+`User` → `Student`, `CompanyRep`, `CareerCentreStaff`
+All subclasses honor the base behavior and can replace one another safely.
 
-PasswordService handles hashing, strength checking, and validation only — no authentication, no I/O.
+## ✔ Interface Segregation Principle (ISP)
 
-✔ O — Open/Closed Principle
+Role menus depend only on the **actions they need**, not a large monolithic interface.
 
-MenuAction allows adding new actions without modifying existing menus.
-Recommendation weights, sorting strategies, eligibility rules are all pluggable.
+## ✔ Dependency Inversion Principle (DIP)
 
-✔ L — Liskov Substitution Principle
+High-level modules depend on **interfaces**, not implementations:
+`Storage`, `Repository`, `EligibilityPolicy`, `Command`, etc., are constructor-injected.
 
-User → Student / CompanyRep / CareerCentreStaff
-All subclasses maintain the contract defined by User and can be used interchangeably by polymorphic flows.
+---
 
-✔ I — Interface Segregation Principle
+# 🧪 Testing
 
-Each menu role uses only the actions it needs:
+Comprehensive test cases include:
 
-Student-only actions
+* Authentication
+* Data persistence
+* Application workflow
+* Approval/withdrawal logic
+* Filtering & sorting
+* Recommendation accuracy
+* Role-based access guard
+* Error handling & edge cases
 
-Rep-only actions
+---
 
-Staff-only actions
+# 📝 Reflection
 
-No “god interface”; all implement tiny MenuAction units.
+* Learned to balance extensibility vs. over-engineering
+* Understood the power of **composition**, **clear interfaces**, and **design patterns**
+* CSV debugging reinforced the value of early testing and logging
+* Stronger grasp of maintainable, modular OO design
 
-✔ D — Dependency Inversion Principle
-
-High-level modules depend on:
-
-Storage
-
-Repository
-
-EligibilityPolicy
-
-Command
-
-WaitlistListener
-
-All injected via constructors → easy to replace or extend.
-
-📁 Repository Structure
-SC2002/
-│── src/
-│   ├── boundary/
-│   ├── control/
-│   ├── entities/
-│   ├── storage/
-│   ├── util/
-│   └── App.java
-│
-│── data/
-│   ├── sample_student_list.csv
-│   ├── sample_company_list.csv
-│   └── sample_staff_list.csv
-│
-├── diagrams/
-│   ├── uml_class_diagram.png
-│   └── uml_sequence_diagram.png
-│
-├── docs/
-│   └── javadoc/
-│
-├── README.md
-└── report.pdf
-
-🛠️ Setup & Running the Application
-Prerequisites
-
-Java 17+
-
-Terminal / command prompt
-
-To Run
-cd src
-javac App.java
-java App
-
-To Regenerate Javadoc
-javadoc -d docs/javadoc -author -private -version $(find . -name "*.java")
-
-🧪 Testing
-
-Test cases are listed in the /tests section and follow:
-
-Authentication
-
-Data persistence
-
-Application logic
-
-Staff approval workflows
-
-Filtering & sorting correctness
-
-Recommendation ranking accuracy
-
-Edge cases (duplicate apply, waitlists, visibility toggle, withdrawn state)
-
-Refer to full test matrix inside report.
-Source test cases are based on assignment sample inputs. 
-
-SC2002 Assignment 2025S1 (1)
-
-📝 Reflection Summary 
-
-Learned to balance extensibility with simplicity
-
-Experienced the benefits of composition, clean interfaces, and strategic pattern usage
-
-Debugging CSV-based systems taught us the importance of logging & early testing
-
-Gained strong understanding of maintainable OO design
-
-Future improvements:
-
-Event bus for Observer pattern
-
-Automated JUnit testing
-
-More robust error handling
-
-🔗 Report & Deliverables
-
-Full PDF Report (Design Considerations, UML, Sequence Diagram, Reflection)
-
-Javadoc
-
-Data files
-
-Source code
-
-Additional diagrams
